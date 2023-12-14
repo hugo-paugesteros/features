@@ -1,0 +1,11 @@
+{
+  "include": ["features"],
+  // "executionEnvironments" : [
+  //   {
+  //     "root": "tests",
+  //     "extraPaths": [
+  //       ""
+  //     ]
+  //   }
+  // ]
+}

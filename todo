@@ -1,0 +1,16 @@
+[x] frame
+[x] RMS
+[] STW (pad end 0 ?)
+
+
+Representations : 
+    - Waveform
+    - FT
+    - STW (short term waveform)
+    - STFT (short term fourier transform)
+
+Features :
+    - RMS(STW(frame_size, hop_size))
+    - RMS(Waveform)
+    - ZCR(STW)
+    - ZCR(Waveform)
