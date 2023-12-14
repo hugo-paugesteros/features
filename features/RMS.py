@@ -2,7 +2,7 @@ import numpy as np
 import numpy.typing as npt
 import typing
 
-from . import Feature, Waveform, STW, utils
+from . import Feature, Waveform, STW
 
 class RMS(Feature):
 
