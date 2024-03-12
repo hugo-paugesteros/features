@@ -9,19 +9,11 @@ class SpectralSlope(Feature):
     NAME        = 'Spectral Slope'
     UNIT        = 'Hz^-1'
 
-    frame_size  = 2048
-    hop_size    = 1024
-
-    def __init__(self, frame_size: int = 2048, hop_size: int = 1024, **kwargs) -> None:
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.frame_size = frame_size
-        self.hop_size = hop_size
 
-        self.stft = STFT(frame_size=self.frame_size, hop_size=self.hop_size)
-
-    def _compute(self, y: npt.NDArray, sr: int) -> npt.NDArray:
-        Y, _, f = self.stft.compute(y, sr)
-        S = np.abs(Y)
-        f_mean = np.mean(f)
-        SS = np.sum((f - f_mean).reshape(-1, 1) * (S - np.mean(S, axis=-2, keepdims=True)), axis=-2) / np.sum((f - f_mean)**2)
-        return SS
+    def compute(self, stft: STFT) -> npt.NDArray:
+        S = np.abs(stft.Y)
+        f_mean = np.mean(stft.f)
+        self.SS = np.sum((stft.f - f_mean).reshape(-1, 1) * (S - np.mean(S, axis=-2, keepdims=True)), axis=-2) / np.sum((stft.f - f_mean)**2)
+        return self.SS

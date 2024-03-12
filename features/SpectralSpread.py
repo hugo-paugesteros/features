@@ -1,35 +1,32 @@
 import numpy as np
 import numpy.typing as npt
 
+from . import Feature
 from .STFT import STFT
+from .FT import FT
 from .SpectralCentroid import SpectralCentroid
 
-class SpectralSpread():
+class SpectralSpread(Feature):
 
-    NAME        = 'Spectral Centroid'
+    NAME        = 'Spectral Spread'
     UNIT        = 'Hz'
 
-    frame_size  = 2048
-    hop_size    = 1024
-    mean        = True
+    def __init__(self) -> None:
+        pass
 
-    def __init__(self, frame_size: int = 2048, hop_size: int = 1024, mean=True) -> None:
-        self.frame_size = frame_size
-        self.hop_size = hop_size
-        self.stft = STFT(frame_size=self.frame_size)
-        self.SC = SpectralCentroid(mean=False)
-        self.mean = mean
+    def compute(self, spectrogram: STFT | FT) -> npt.NDArray:
+        S = np.abs(spectrogram.Y) 
+        SC = SpectralCentroid().compute(spectrogram)
 
-    def compute(self, y: npt.NDArray, sr: int) -> npt.NDArray:
-        Y, _, freq = self.stft.compute(y, sr)
-        S = np.abs(Y) 
-        SC = self.SC.compute(y, sr)
-        SS = np.sqrt(np.sum(np.subtract.outer(SC, freq).swapaxes(-2, -1)**2 * S, axis=-2))
-        if self.mean:
-            return np.mean(SS, axis=-1)
-        return SS
-
-    def __str__(self) -> str:
-        return self.NAME
-
-
+        '''
+        SC.shape = (frames)
+        spectrogram.f.shape = (frame_size)
+        (SC - spectrogram.f).shape = (frame_size, frames)
+        SS.shape = (frames)
+        '''
+        if isinstance(spectrogram, FT):
+            self.SS = np.sqrt(np.sum(np.subtract.outer(SC, spectrogram.f)**2 * S, axis=-1) / np.sum(S, axis=-1))
+        else:
+            # SS = np.sqrt(np.sum(np.subtract.outer(spectrogram.f, SC)**2 * S, axis=-2) / np.sum(S))
+            self.SS = np.sqrt(np.sum(np.subtract.outer(SC, spectrogram.f).swapaxes(-2, -1)**2 * S, axis=-2) / np.sum(S, axis=-2))
+        return self.SS

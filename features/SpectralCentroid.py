@@ -1,31 +1,32 @@
 import numpy as np
 import numpy.typing as npt
+import typing
 
-from .STFT import STFT
+from . import Feature
+from . import STFT, FT
 
-class SpectralCentroid():
+class SpectralCentroid(Feature):
 
     NAME        = 'Spectral Centroid'
     UNIT        = 'Hz'
 
-    frame_size  = 2048
-    hop_size    = 1024
-    mean        = True
+    def __init__(self) -> None:
+        pass
 
-    def __init__(self, frame_size: int = 2048, hop_size: int = 1024, mean=True) -> None:
-        self.frame_size = frame_size
-        self.hop_size = hop_size
-        self.mean = mean
-        self.stft = STFT(frame_size=self.frame_size, hop_size=self.hop_size)
+    @typing.overload
+    def compute(self, spectrogram: STFT) -> npt.NDArray:
+        ...
+    @typing.overload
+    def compute(self, spectrogram: FT) -> npt.NDArray:
+        ...
+    def compute(self, spectrogram: STFT | FT) -> npt.NDArray:
+        S = np.abs(spectrogram.Y)
 
-    def compute(self, y: npt.NDArray, sr: int) -> npt.NDArray:
-        Y, _, freq = self.stft.compute(y, sr)
-        S = np.abs(Y)
-        SC = np.sum(freq.reshape(-1, 1) * S, axis=-2) / np.sum(S, axis=-2)
-        if self.mean:
-            return np.mean(SC, axis=-1)
-        return SC
-
-    def __str__(self) -> str:
-        return self.NAME
+        if(isinstance(spectrogram, FT)):
+            self.SC = np.nansum(spectrogram.f * S, axis=-1) / np.nansum(S, axis=-1)
+        else:
+            # spectrogram.f.shape = (frame_size)
+            # S.shape = (frame_size, frames)
+            self.SC = np.nansum(spectrogram.f.reshape(-1, 1) * S, axis=-2) / np.nansum(S, axis=-2)
+        return self.SC
 

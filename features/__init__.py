@@ -4,6 +4,12 @@ from .STW import STW
 from .utils import frame
 from .RMS import RMS
 from .STFT import STFT
+from .FT import FT
+from .Attack import Attack
+from .AttackSlope import AttackSlope
+from .Duration import Duration
+from .DecreaseSlope import DecreaseSlope
+from .TemporalCentroid import TemporalCentroid
 from .SpectralCentroid import SpectralCentroid
 from .SpectralDecrease import SpectralDecrease
 from .SpectralKurtosis import SpectralKurtosis
@@ -16,3 +22,6 @@ from .SpectralFlux import SpectralFlux
 from .SpectralCrest import SpectralCrest
 from .SpectralFlatness import SpectralFlatness
 from .ZCR import ZCR
+from .Mean import Mean
+from .Log import Log
+from .Envelope import Envelope

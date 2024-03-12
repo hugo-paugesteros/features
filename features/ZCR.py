@@ -23,5 +23,5 @@ class ZCR(Feature):
         ...
     def compute(self, audio: Waveform | STW) -> npt.NDArray:
         axis = -1 if isinstance(audio, Waveform) else -2
-        zcr = np.sum(np.abs(np.diff(audio.y >= 0, axis=axis)), axis=axis)
-        return zcr
+        self.zcr = np.sum(np.abs(np.diff(audio.y >= 0, axis=axis)), axis=axis)
+        return self.zcr

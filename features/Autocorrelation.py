@@ -4,9 +4,9 @@ import typing
 
 from . import Feature, Waveform, STW
 
-class RMS(Feature):
+class Autocorrelation(Feature):
 
-    NAME        = 'RMS Energy'
+    NAME        = 'Autocorrelation'
     UNIT        = ''
 
     def __init__(self, **kwargs) -> None:
@@ -19,6 +19,10 @@ class RMS(Feature):
     def compute(self, audio: STW) -> npt.NDArray:
         ...
     def compute(self, audio: Waveform | STW) -> npt.NDArray:
-        axis = -1 if isinstance(audio, Waveform) else -2
-        self.rms = 10 * np.log10(np.sqrt(np.nanmean(np.power(audio.y, 2), axis=axis)))
-        return self.rms
+        if isinstance(audio, Waveform):
+            autocorrelation = np.correlate(audio.y, audio.y, 'same')[:12]
+        else:
+            autocorrelation = np.zeros((12, audio.y.shape[1]))
+            for i in range(audio.y.shape[1]):
+                autocorrelation[:, i] = np.correlate(audio.y[:, i], audio.y[:, i], 'same')[:12]
+        return autocorrelation
