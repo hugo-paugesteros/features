@@ -1,6 +1,9 @@
-[old]/
 __pycache__/
 
 *.egg-info/
 build/
 venv/
+old
+pyproject.toml
+pyrightconfig.json
+todo
