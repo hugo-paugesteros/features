@@ -25,18 +25,14 @@ class Waveform(PipelineElement):
         for pipeline in pipelines:
             parent = self
             for pipe in pipeline:
+                pipe.PARENT = parent
                 child = parent.add_child(pipe)
                 
-                if(child.feature is None):
-                    child.compute(parent)
-
+                if(child.feature is not None):
+                    feature = child.feature
+                else:
+                    feature = child.compute(parent)
                 parent = child
 
-            features.append(child.feature)
-        self.print_node(self)
+            features.append(feature)
         return features
-
-    def print_node(self, node, prefix=''):
-        for child in node.children:
-            print(prefix, child)
-            self.print_node(child, prefix + '\t')

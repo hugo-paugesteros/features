@@ -6,7 +6,7 @@ from . import Feature, Waveform, STW
 
 class RMS(Feature):
 
-    NAME        = 'RMS Energy'
+    # NAME        = 'RMS Energy'
     UNIT        = ''
 
     def __init__(self, **kwargs) -> None:
@@ -21,4 +21,5 @@ class RMS(Feature):
     def compute(self, audio: Waveform | STW) -> npt.NDArray:
         axis = -1 if isinstance(audio, Waveform) else -2
         self.rms = 10 * np.log10(np.sqrt(np.nanmean(np.power(audio.y, 2), axis=axis)))
+        self.feature = self.rms
         return self.rms

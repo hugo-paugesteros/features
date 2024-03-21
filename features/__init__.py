@@ -3,8 +3,8 @@ from .Waveform import Waveform
 from .STW import STW
 from .utils import frame
 from .RMS import RMS
-from .STFT import STFT
 from .FT import FT
+from .STFT import STFT
 from .Attack import Attack
 from .AttackSlope import AttackSlope
 from .Duration import Duration

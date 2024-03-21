@@ -2,15 +2,17 @@ import numpy as np
 import numpy.typing as npt
 from abc import ABC, abstractmethod
 
+from features.PipelineElement import PipelineElement
+
 from . import Waveform
 
-class Feature(ABC):
+class Feature(PipelineElement):
 
-    NAME = ''
-    mean = True
+    # NAME = ''
+    feature = None
 
-    def __init__(self, mean: bool = True):
-        self.mean = mean
+    def __init__(self):
+        super().__init__()
         pass
 
     # @abstractmethod
@@ -27,5 +29,5 @@ class Feature(ABC):
     #     else:
     #         return self._compute(**kwargs)
 
-    def __str__(self) -> str:
-        return self.NAME
+    # def __str__(self) -> str:
+    #     return self.NAME

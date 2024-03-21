@@ -1,12 +1,14 @@
 import numpy as np
 import numpy.typing as npt
 
+from features.Feature import Feature
+
 from . import Waveform
 
-class FT():
+class FT(Feature):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def compute(self, waveform: Waveform):
         padded = np.nan_to_num(waveform.y)
